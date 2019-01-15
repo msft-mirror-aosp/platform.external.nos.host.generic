@@ -76,6 +76,8 @@ struct options_s {
   int change_pw;
   uint32_t erase_code;
   int ap_uart;
+  int selftest;
+  char **selftest_args;
   /* generic connection options */
   const char *device;
 } options;
@@ -94,6 +96,7 @@ enum no_short_opts_for_these {
   OPT_CHANGE_PW,
   OPT_ERASE,
   OPT_AP_UART,
+  OPT_SELFTEST,
 };
 
 const char *short_opts = ":hvlV:fF:";
@@ -120,6 +123,7 @@ const struct option long_opts[] = {
   {"erase",         1, NULL, OPT_ERASE},
   {"ap_uart",       0, NULL, OPT_AP_UART},
   {"ap-uart",       0, NULL, OPT_AP_UART},
+  {"selftest",      0, NULL, OPT_SELFTEST},
 #ifndef ANDROID
   {"device",        1, NULL, OPT_DEVICE},
 #endif
@@ -172,9 +176,13 @@ void usage(const char *progname)
     "\n"
     "  --ap_uart            Query the AP UART passthru setting\n"
     "                       (It can only be set in the BIOS)\n"
-    "\n\n"
+    "\n"
     "  --erase=CODE         Erase all user secrets and reboot.\n"
     "                       This skips all other actions.\n"
+    "\n"
+    "  --selftest [ARGS]    Run one or more selftests. With no ARGS, it runs\n"
+    "                       a default suite. This command will consume all\n"
+    "                       following args, so run it alone for best results.\n"
 #ifndef ANDROID
     "\n"
     "Options:\n"
@@ -228,6 +236,21 @@ int is_app_success(uint32_t retval)
   case APP_ERROR_TOO_MUCH:
     fprintf(stderr, "caller sent too much data");
     break;
+  case APP_ERROR_IO:
+    fprintf(stderr, "problem sending or receiving data");
+    break;
+  case APP_ERROR_RPC:
+    fprintf(stderr, "problem during RPC communication");
+    break;
+  case APP_ERROR_CHECKSUM:
+    fprintf(stderr, "checksum failed");
+    break;
+  case APP_ERROR_BUSY:
+    fprintf(stderr, "the app is already working on a commnad");
+    break;
+  case APP_ERROR_TIMEOUT:
+    fprintf(stderr, "the app took too long to respond");
+    break;
   default:
     if (retval >= APP_SPECIFIC_ERROR &&
        retval < APP_LINE_NUMBER_BASE) {
@@ -237,7 +260,7 @@ int is_app_success(uint32_t retval)
       fprintf(stderr, "error at line %d",
         retval - APP_LINE_NUMBER_BASE);
     } else {
-      fprintf(stderr, "unknown)");
+      fprintf(stderr, "unknown");
     }
   }
   fprintf(stderr, "\n");
@@ -675,6 +698,7 @@ static uint32_t do_enable(AppClient &app, const char *pw)
   std::vector<uint8_t> data(sizeof(struct nugget_app_enable_update));
   struct nugget_app_enable_update *s =
     (struct nugget_app_enable_update*)data.data();
+  std::vector<uint8_t> reply;
 
   memset(&s->password, 0xff, sizeof(s->password));
   if (pw && *pw) {
@@ -687,10 +711,12 @@ static uint32_t do_enable(AppClient &app, const char *pw)
   s->which_headers = options.enable_ro ? NUGGET_ENABLE_HEADER_RO : 0;
   s->which_headers |= options.enable_rw ? NUGGET_ENABLE_HEADER_RW : 0;
 
-  uint32_t rv = app.Call(NUGGET_PARAM_ENABLE_UPDATE, data, nullptr);
+  reply.reserve(1);
+  uint32_t rv = app.Call(NUGGET_PARAM_ENABLE_UPDATE, data, &reply);
 
   if (is_app_success(rv))
-    printf("Update enabled\n");
+    /* Reply byte is true only if header was CHANGED to valid */
+    printf("Update %s enabled\n", reply[0] ? "changed to" : "is already");
 
   return rv;
 }
@@ -714,7 +740,6 @@ static uint32_t do_ap_uart(AppClient &app)
   return rv;
 }
 
-
 static uint32_t do_erase(AppClient &app)
 {
   std::vector<uint8_t> data(sizeof(uint32_t));
@@ -725,6 +750,35 @@ static uint32_t do_erase(AppClient &app)
   if (is_app_success(rv))
     printf("Citadel erase and reboot requested\n");
 
+  return rv;
+}
+
+#define MAX_SELFTEST_REPLY_LEN 4096
+static uint32_t do_selftest(AppClient &app, int argc, char *argv[])
+{
+  int i, j;
+  uint32_t rv;
+  std::vector<uint8_t> data;
+
+  /* Copy all the args to send, including their terminating '\0' */
+  for (i = options.selftest; i < argc; i++) {
+    for (j = 0; argv[i][j]; j++) {
+      data.push_back(argv[i][j]);
+    }
+    data.push_back('\0');
+  }
+
+  /* Send args, get reply */
+  data.reserve(MAX_SELFTEST_REPLY_LEN);
+  rv = app.Call(NUGGET_PARAM_SELFTEST, data, &data);
+  if (is_app_success(rv)) {
+    /* Make SURE it's null-terminated */
+    size_t len = data.size();
+    if (len) {
+      data[len - 1] = '\0';
+      printf("%s\n", data.data());
+    }
+  }
   return rv;
 }
 
@@ -746,7 +800,8 @@ static uint32_t do_force_reset(NuggetClient &client)
 #endif
 
 int execute_commands(const std::vector<uint8_t> &image,
-                     const char *old_passwd, const char *passwd)
+                     const char *old_passwd, const char *passwd,
+                     int argc, char *argv[])
 {
 #ifdef ANDROID
   CitadeldProxyClient client;
@@ -835,6 +890,11 @@ int execute_commands(const std::vector<uint8_t> &image,
   if (options.reboot &&
       do_reboot(app) != APP_SUCCESS) {
     return 7;
+  }
+
+  if (options.selftest &&
+      do_selftest(app, argc, argv) != APP_SUCCESS) {
+    return 1;
   }
 
   if (options.force_reset &&
@@ -945,12 +1005,16 @@ int main(int argc, char *argv[])
       options.erase_code = (uint32_t)strtoul(optarg, &e, 0);
       if (!*optarg || (e && *e)) {
         Error("Invalid argument: \"%s\"\n", optarg);
-        errorcnt++;
       }
       got_action = 1;
       break;
     case OPT_AP_UART:
       options.ap_uart = 1;
+      got_action = 1;
+      break;
+    case OPT_SELFTEST:
+      options.selftest = optind;
+      options.selftest_args = argv;
       got_action = 1;
       break;
 
@@ -1026,7 +1090,7 @@ int main(int argc, char *argv[])
   }
 
   /* Okay, let's do it! */
-  (void) execute_commands(image, old_passwd, passwd);
+  (void) execute_commands(image, old_passwd, passwd, argc, argv);
   /* This is the last action, so fall through either way */
 
 out:

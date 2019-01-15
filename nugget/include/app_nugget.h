@@ -110,12 +110,13 @@ struct nugget_app_enable_update {
 #define NUGGET_PARAM_ENABLE_UPDATE 0x0003
 /*
  * Mark the specified image header(s) as valid, if the provided password
- * matches.
+ * matches. Returns true if either header was CHANGED to valid, which is an
+ * indication that the AP should request a reboot so that it can take effect.
  *
  * @param args         struct nugget_app_enable_update
  * @param arg_len      sizeof(struct nugget_app_enable_update)
- * @param reply        <none>
- * @param reply_len    0
+ * @param reply        0 or 1
+ * @param reply_len    1 byte
  *
  * @errors             APP_ERROR_BOGUS_ARGS
  */
@@ -272,6 +273,21 @@ enum nugget_ap_uart_passthru_cfg {
  * @param arg_len      0
  * @param reply        uint32_t cycles
  * @param reply_len    sizeof(uint32_t)
+ */
+
+#define NUGGET_PARAM_SELFTEST 0x0101
+/*
+ * Run an intentionally vaguely specified internal test.
+ *
+ * This accepts arbitrary args and returns arbitrary results, as defined by the
+ * Citadel firmware. To allow changes to Nugget OS without requiring
+ * simultaneous changes to the AP, calling this with no args will run a default
+ * set of tests and return a null-terminated string with the result.
+ *
+ * @param args         zero or more null-terminated strings, concatenated
+ * @param arg_len      number of bytes in args
+ * @param reply        null-terminated string (usually)
+ * @param reply_len    number of bytes in reply (including trailing '\0')
  */
 
 /****************************************************************************/
