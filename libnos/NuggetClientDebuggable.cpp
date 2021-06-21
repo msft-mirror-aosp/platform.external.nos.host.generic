@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright 2020 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,47 +14,22 @@
  * limitations under the License.
  */
 
-#include <nos/NuggetClient.h>
+#include <nos/NuggetClientDebuggable.h>
 #include <limits>
 #include <nos/transport.h>
 #include <application.h>
 
 namespace nos {
 
-NuggetClient::NuggetClient(const std::string& name)
-    : device_name_(name), open_(false) {
-}
+NuggetClientDebuggable::NuggetClientDebuggable(
+  const char* name, uint32_t config,
+  request_cb_t req_fn, response_cb_t resp_fn)
+  : NuggetClient(name, config),
+    request_cb_(req_fn), response_cb_(resp_fn) {}
 
-NuggetClient::NuggetClient(const char* name, uint32_t config)
-    : device_name_(name ? name : ""), open_(false) {
-  device_ = { .config = config };
-}
-
-NuggetClient::~NuggetClient() {
-  Close();
-}
-
-void NuggetClient::Open() {
-  if (!open_) {
-    open_ = nos_device_open(
-        device_name_.empty() ? nullptr : device_name_.c_str(), &device_) == 0;
-  }
-}
-
-void NuggetClient::Close() {
-  if (open_) {
-    device_.ops.close(device_.ctx);
-    open_ = false;
-  }
-}
-
-bool NuggetClient::IsOpen() const {
-  return open_;
-}
-
-uint32_t NuggetClient::CallApp(uint32_t appId, uint16_t arg,
-                               const std::vector<uint8_t>& request,
-                               std::vector<uint8_t>* response) {
+uint32_t NuggetClientDebuggable::CallApp(uint32_t appId, uint16_t arg,
+                                         const std::vector<uint8_t>& request,
+                                         std::vector<uint8_t>* response) {
   if (!open_) {
     return APP_ERROR_IO;
   }
@@ -73,35 +48,22 @@ uint32_t NuggetClient::CallApp(uint32_t appId, uint16_t arg,
     replyData = response->data();
   }
 
+  if (request_cb_) {
+    (request_cb_)(request);
+  }
+
   uint32_t status_code = nos_call_application(&device_, appId, arg,
                                               request.data(), requestSize,
                                               replyData, &replySize);
 
   if (response != nullptr) {
     response->resize(replySize);
+    if (response_cb_) {
+      (response_cb_)(status_code, *response);
+    }
   }
 
   return status_code;
-}
-
-uint32_t NuggetClient::Reset() const {
-
-  if (!open_)
-    return APP_ERROR_NOT_READY;
-
-  return device_.ops.reset(device_.ctx);
-}
-
-nos_device* NuggetClient::Device() {
-  return open_ ? &device_ : nullptr;
-}
-
-const nos_device* NuggetClient::Device() const {
-  return open_ ? &device_ : nullptr;
-}
-
-const std::string& NuggetClient::DeviceName() const {
-  return device_name_;
 }
 
 }  // namespace nos
