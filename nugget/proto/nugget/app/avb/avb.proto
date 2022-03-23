@@ -53,16 +53,13 @@ enum LockIndex {
 }
 
 // GetState
-message GetStateRequest {
-  bool keysclear_reset = 1;
-}
+message GetStateRequest {}
 message GetStateResponse {
   uint64 version = 1;
   bool bootloader = 2;
   bool production = 3;
   uint32 number_of_locks = 4;
   bytes locks = 5;
-  bool keysclear_required = 6;
 }
 
 // Load
