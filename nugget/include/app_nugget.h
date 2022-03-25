@@ -414,6 +414,59 @@ struct nugget_app_storage {
  * @errors             APP_ERROR_BOGUS_ARGS
  */
 
+#define GSC_DEBUG_DUMP_VERSION 0
+struct gsc_debug_dump_msg {
+	uint8_t timestamp[6];   // Bottom 48 bits of system time; enough for 8 years @ 1 us
+	uint8_t channel;        // log channel (task_id or system call)
+	uint8_t version;        // gsc_debug_dump_msg struct version
+	uint32_t error_code;    // error code
+	uint32_t reserved;      // reserved for other useful log
+};
+
+#define DEBUG_MESSAGE_MAX_COUNT 64
+#define DEBUG_MESSAGE_BUFFER_SIZE (DEBUG_MESSAGE_MAX_COUNT * sizeof(struct gsc_debug_dump_msg))
+
+#define NUGGET_PARAM_DEBUG_DUMP 0x0016
+/*
+ * Get GSC debug message from 1KB ring buffer
+ *
+ * @param args         <none>
+ * @param arg_len      0
+ * @param reply        recent debug buffer output
+ * @param reply_len    1KB
+ */
+
+#define GSA_GSC_PAIRING_VERSION 0
+#define EC_P256_PUBLIC_KEY_SIZE 64
+#define EC_P256_PRIVATE_KEY_SIZE 32
+#define PSK_KEY_SIZE 32
+#define HAS_GSA_PUBKEY 0xa3
+struct gsa_gsc_pairing_persist_storage {
+	uint8_t version;
+	uint8_t has_gsa_public_key_provision;
+	uint8_t gsa_public_key[EC_P256_PUBLIC_KEY_SIZE];
+	uint8_t gsc_private_key[EC_P256_PRIVATE_KEY_SIZE];
+	uint8_t gsc_public_key[EC_P256_PUBLIC_KEY_SIZE];
+};
+
+#define GSA_GSC_PSK_VERSION 0
+#define HAS_GSA_GSC_PSK 0xa5
+struct gsa_gsc_psk_persist_storage {
+	uint8_t version;
+	uint8_t has_gsa_gsc_psk_provision;
+	uint8_t gsa_gsc_psk[PSK_KEY_SIZE];
+};
+
+#define NUGGET_PARAM_GSA_KEY_PROVISION 0x0017
+/*
+ * GSA key provision command
+ *
+ * @param args         gsa unique public key
+ * @param arg_len      32
+ * @param reply        gsc public key + sha256(pre-shared key)
+ * @param reply_len    64 + 32
+ */
+
 /****************************************************************************/
 /* Test related commands */
 
