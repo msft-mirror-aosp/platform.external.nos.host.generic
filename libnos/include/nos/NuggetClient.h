@@ -32,13 +32,17 @@ namespace nos {
 class NuggetClient : public NuggetClientInterface {
 public:
     /**
-     * Create a client for the named Nugget device
-     *
-     * An empty device name causes the default device to be selected.
-     * An empty config uses default configurations.
+     * Create a client for the default Nugget device.
      */
-    NuggetClient(const std::string& name);
-    NuggetClient(const char* name = 0, uint32_t config = 0);
+    NuggetClient();
+
+    /**
+     * Create a client for the named Nugget device.
+     *
+     * Passing an empty device name causes the default device to be selected.
+     */
+    NuggetClient(const std::string& device_name);
+    NuggetClient(const char* device_name);
 
     ~NuggetClient() override;
 
@@ -73,11 +77,6 @@ public:
                      std::vector<uint8_t>* response) override;
 
     /**
-     * Reset the device. Use with caution; context may be lost.
-     */
-    uint32_t Reset() const override;
-
-    /**
      * Access the underlying device.
      *
      * NULL is returned if the connection to the device is not open.
@@ -92,7 +91,7 @@ public:
      */
     const std::string& DeviceName() const;
 
-protected:
+private:
     std::string device_name_;
     nos_device device_;
     bool open_;
