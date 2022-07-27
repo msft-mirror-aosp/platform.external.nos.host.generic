@@ -562,7 +562,7 @@ struct secure_channel_retry_count_persist_storage {
  * @param args         GSA noise handshake state
  * @param arg_len      1
  * @param reply        <none>
- * @param reply_len    0
+ * @param reply_len    1
  */
 #define NUGGET_PARAM_GET_BIG_EVENT_REPORT 0x001b
 /*
