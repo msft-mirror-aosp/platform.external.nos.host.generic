@@ -5,8 +5,6 @@
 
 #pragma once
 
-#ifndef __ASSEMBLER__
-
 /*****************************************************************************/
 
 #define TA_MASK 0xFF000000
@@ -40,24 +38,5 @@ enum km_feature_list {
 	km_feature_rkp,
 	km_feature_rkp_dice,
 	km_feature_dice,
-	km_feature_max = FEATURE_MASK, // For 24-bit alignment
+	km_feature_max = FEATURE_MASK,  // For 24-bit alignment
 };
-
-/*****************************************************************************/
-
-/**
- * Query the feature supporting status based on task_id and module_id.
- *
- * @param id: APP_ID which is define in enum feature_support_app_id{}
- * @param module_id: sub module list defined above
- * @param is_supported: to output the supporting status. True = support.
- *
- * @return ERR_NONE, or error
- *
- * NOTE: "id" here is different from the TASK_ID_xxx (which is mutable) or
- *       APP_ID_xxx (which is out of hex range).
- *       Instead, we define a fixed order list which can be shared external.
- * */
-__err_t is_feature_supported_by_task(enum feature_support_app_id id,
-				     uint32_t module_id, bool *is_supported);
-#endif /* !__ASSEMBLER__ */
