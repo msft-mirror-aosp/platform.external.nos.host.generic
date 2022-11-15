@@ -6,6 +6,7 @@ cc_library(
         "nugget/include/application.h",
         "nugget/include/avb.h",
         "nugget/include/citadel_events.h",
+        "nugget/include/feature_map.h",
         "nugget/include/flash_layout.h",
         "nugget/include/keymaster.h",
         "nugget/include/signed_header.h",

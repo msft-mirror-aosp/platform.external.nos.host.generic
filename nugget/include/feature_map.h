@@ -21,22 +21,30 @@
 /*****************************************************************************/
 
 enum feature_support_app_id {
-	feature_id_avb = 0,
-	feature_id_gfa,
-	feature_id_identity,
-	feature_id_keymint,
-	feature_id_nugget,
-	feature_id_weaver,
-	feature_id_count,
-	feature_id_max = 0xff, // For 8-bit alignment
+  feature_id_avb = 0,
+  feature_id_gfa = 1,
+  feature_id_identity = 2,
+  feature_id_keymint = 3,
+  feature_id_nugget = 4,
+  feature_id_weaver = 5,
+
+  /* Please do not change numbers after they've been released */
+
+  feature_id_count,       // used in sparse lookup table
+  feature_id_max = 0xff,  // 8-bit TA_FIELD
 };
+static_assert(feature_id_count <= feature_id_max,
+              "Too many enum feature_support_app_id values");
 
 enum km_feature_list {
-	km_feature_individual_attest,
-	km_feature_batch_attest,
-	km_feature_gnubby_attest,
-	km_feature_rkp,
-	km_feature_rkp_dice,
-	km_feature_dice,
-	km_feature_max = FEATURE_MASK,  // For 24-bit alignment
+  km_feature_individual_attest = 0,
+  km_feature_batch_attest = 1,
+  km_feature_gnubby_attest = 2,
+  km_feature_rkp = 3,
+  km_feature_rkp_dice = 4,
+  km_feature_dice = 5,
+
+  /* Please do not change numbers after they've been released */
+
+  km_feature_max = FEATURE_MASK,  // 24-bit FEATURE_FIELD
 };
