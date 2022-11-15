@@ -11,6 +11,19 @@ cc_library(
         "nugget/include/keymaster.h",
         "nugget/include/signed_header.h",
     ],
+    deps = [
+        "nos_headers_hals",
+    ],
+    strip_include_prefix = "nugget/include/",
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "nos_headers_hals",
+    hdrs = [
+        "nugget/include/hals/common.h",
+        "nugget/include/hals/weaver.h",
+    ],
     strip_include_prefix = "nugget/include/",
     visibility = ["//visibility:public"],
 )
