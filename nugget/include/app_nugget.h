@@ -559,8 +559,8 @@ struct secure_channel_retry_count_persist_storage {
 /*
  * Secure transport report noise handshake state command
  *
- * @param args         GSA noise handshake state
- * @param arg_len      1
+ * @param args         GSA noise handshake state + report suez state
+ * @param arg_len      2
  * @param reply        <none>
  * @param reply_len    1
  */
