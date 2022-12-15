@@ -23,34 +23,17 @@ extern "C" {
 #include "hals/common.h"
 
 /****************************************************************************/
-/* The command is sent separately from any data */
-
-enum nos2_weaver_cmd {
-  NOS2_WEAVER_GET_CONFIG,
-  NOS2_WEAVER_WRITE,
-  NOS2_WEAVER_READ,
-  NOS2_WEAVER_ERASE_VALUE,
-
-  NOS2_WEAVER_NUM_CMDS
-};
-
-/* error codes specific to this application */
-enum {
-  /* NOS2_WEAVER_READ may also return one of these */
-  APP_ERROR_NOS2_WEAVER_READ_INCORRECT_KEY = APP_SPECIFIC_ERROR,
-  APP_ERROR_NOS2_WEAVER_READ_THROTTLE
-};
-
-/****************************************************************************/
-/* Magic constants */
-
-/*
+/* Magic constants
+ *
  * Only Acropora knows these numbers. The AP has to ask.
  *
  * It's a pain to create multiple variable-length arrays using strictly correct
  * C, but the Weaver service is in the Nugget OS repo so we can hard-code the
  * sizes here. If it ever changes we'll use the hal.version field to distinguish
  * which one we're using.
+ *
+ * Still, we want to match the AIDL definitions as closely as possible, to
+ * make our code easier to understand and maintain.
  */
 #define NOS2_WEAVER_NUM_SLOTS 64
 #define NOS2_WEAVER_KEY_BYTES (128 / 8)
@@ -64,10 +47,22 @@ typedef uint8_t nos2_weaver_key_t[NOS2_WEAVER_KEY_BYTES];
 typedef uint8_t nos2_weaver_value_t[NOS2_WEAVER_VALUE_BYTES];
 
 /****************************************************************************/
+/* The command is sent separately from any data */
+
+enum nos2_weaver_cmd {
+  NOS2_WEAVER_GET_CONFIG,
+  NOS2_WEAVER_WRITE,
+  NOS2_WEAVER_READ,
+  NOS2_WEAVER_ERASE_VALUE,
+
+  NOS2_WEAVER_NUM_CMDS
+};
+
+/****************************************************************************/
 /* Request/Response data. Both are optional and depend on the command. */
 
 /** NOS2_WEAVER_GET_CONFIG */
-/* No struct nos2_weaver_get_config_request */
+/* There is no struct nos2_weaver_get_config_request */
 struct nos2_weaver_get_config_response {
   struct nos2_cmd_hal hal;
 
@@ -84,7 +79,7 @@ struct nos2_weaver_write_request {
   nos2_weaver_key_t key;
   nos2_weaver_value_t value;
 };
-/* No struct nos2_weaver_write_response */
+/* There is no struct nos2_weaver_write_response */
 
 /** NOS2_WEAVER_READ */
 struct nos2_weaver_read_request {
@@ -94,10 +89,19 @@ struct nos2_weaver_read_request {
   nos2_weaver_key_t key;
 };
 
+enum nos2_weaver_read_status {
+    NOS2_WEAVER_READ_STATUS_OK,
+    NOS2_WEAVER_READ_STATUS_FAILED,
+    NOS2_WEAVER_READ_STATUS_INCORRECT_KEY,
+    NOS2_WEAVER_READ_STATUS_THROTTLE,
+};
+
 struct nos2_weaver_read_response {
   struct nos2_cmd_hal hal;
 
   uint32_t timeout;
+  uint32_t status;  /* enum nos2_weaver_read_status, but of specified size */
+  /* Put potentially variable-length members at the end. It's NOT, though */
   nos2_weaver_value_t value;
 };
 
@@ -107,7 +111,7 @@ struct nos2_weaver_erase_request {
 
   uint32_t slot_id;
 };
-/* No struct nos2_weaver_erase_response */
+/* There is no struct nos2_weaver_erase_response */
 
 /****************************************************************************/
 #ifdef __cplusplus
