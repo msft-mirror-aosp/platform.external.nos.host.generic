@@ -154,6 +154,10 @@ service Keymaster {
    */
   rpc ExportDeviceIds(ExportDeviceIdsRequest) returns (ExportDeviceIdsResponse);
 
+  /*
+   * RKP v3 implementation
+   */
+  rpc GenerateRkpCsrV2(GenerateRkpCsrV2Request) returns (GenerateRkpCsrV2Response);
   // These are implemented with a enum, so new RPCs must be appended, and
   // deprecated RPCs need placeholders.
 }
@@ -634,4 +638,19 @@ message GenerateRkpCsrResponse{
   bytes keys_to_sign_mac = 2;
   bytes device_info_blob = 3;
   bytes protected_data_blob = 4;
+}
+
+message GenerateRkpCsrV2Request{
+  RkpCsrV2Operation step = 1;
+  bytes challenge = 2;
+  uint32 num_of_public_keys = 3;
+  MacedKey key_to_sign = 4;
+  OperationHandle handle = 5;
+}
+message GenerateRkpCsrV2Response{
+  ErrorCode error_code = 1;
+  OperationHandle handle = 2;
+  bytes device_info_blob = 3;
+  bytes dice_cert_chain = 4;
+  bytes signature = 5;
 }
