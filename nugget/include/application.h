@@ -80,6 +80,12 @@ typedef const void * const __private;
 #define APP_ID_TRANSPORT_TEST    0x12
 #define APP_ID_FACEAUTH_TEST     0x13
 
+/* OR this with the APP_ID to request no-protobuf messages */
+#define APP_ID_NO_PROTO_FLAG     0x80
+
+/* No-protobuf app, experimental for now */
+#define APP_ID_WEAVER2           (APP_ID_WEAVER | APP_ID_NO_PROTO_FLAG)
+
 /* This app ID should only be used by tests. */
 #define APP_ID_TEST              0xff
 
@@ -90,7 +96,7 @@ typedef const void * const __private;
  * The Command encoding is:
  *
  *   Bits 31-24   Control flags (reserved)
- *   Bits 23-16   Application ID
+ *   Bits 23-16   Application ID (bit 23 indicates C protocol, not protobuf)
  *   Bits 15-0    Parameters (application-specific)
  */
 
