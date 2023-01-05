@@ -3,12 +3,14 @@ cc_library(
     srcs = [
         "NuggetClient.cpp",
         "debug.cpp",
+        "feature.cpp",
     ],
     hdrs = [
         "include/nos/AppClient.h",
         "include/nos/NuggetClient.h",
         "include/nos/NuggetClientInterface.h",
         "include/nos/debug.h",
+        "include/nos/feature.h",
     ],
     includes = [
         "include",
