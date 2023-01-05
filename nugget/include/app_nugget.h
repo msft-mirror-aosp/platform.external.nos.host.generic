@@ -559,11 +559,12 @@ struct secure_channel_retry_count_persist_storage {
 /*
  * Secure transport report noise handshake state command
  *
- * @param args         GSA noise handshake state
- * @param arg_len      1
+ * @param args         GSA noise handshake state + report suez state
+ * @param arg_len      2
  * @param reply        <none>
  * @param reply_len    1
  */
+
 #define NUGGET_PARAM_GET_BIG_EVENT_REPORT 0x001b
 /*
  * This retrieves one pending big_event_report (defined in citadel_events.h).
@@ -575,6 +576,17 @@ struct secure_channel_retry_count_persist_storage {
  * @param reply_len    sizeof struct big_event_report  OR  0
  */
 
+#define NUGGET_PARAM_GET_FEATURE_SUPPORT 0x001c
+/*
+ * Get the specific feature supportness from the specific TA.
+ *
+ * @param args         feature_id
+ * @param arg_len      4 byte
+ * @param reply        0 or 1
+ * @param reply_len    1 byte
+ *
+ * @errors             APP_ERROR_BOGUS_ARGS
+ */
 /****************************************************************************/
 /* Test related commands */
 
