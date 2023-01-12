@@ -440,6 +440,7 @@ message ProvisionDeviceIdsRequest {
   bytes product_model = 6;
   bytes imei = 7;
   bytes meid = 8;
+  bytes imei2 = 9;
 }
 message ProvisionDeviceIdsResponse {
   // Specified in keymaster_defs.proto:ErrorCode
