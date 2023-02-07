@@ -601,6 +601,16 @@ struct secure_channel_retry_count_persist_storage {
  * @param reply_len    64 + 16 = 80 OR 1 bytes
  */
 
+#define NUGGET_PARAM_SECURE_TRANSPORT_TEST 0x001e
+/*
+ * Secure transport test command
+ *
+ * @param args         1008 (1024 - 16 bytes AES_TAG_SIZE) bytes test data
+ * @param arg_len      1008 bytes
+ * @param reply        1008 (1024 - 16 bytes AES_TAG_SIZE) bytes test data
+ * @param reply_len    1008 bytes
+ */
+
 /****************************************************************************/
 /* Test related commands */
 
