@@ -331,3 +331,9 @@ enum CertificateStatus {
   CERT_UNKNOWN_ERROR = 3;
   CERT_WRONG_PACKET = 4;
 }
+
+enum RkpCsrV2Operation {
+  RKP_CSR_V2_BEGIN = 0;
+  RKP_CSR_V2_UPDATE = 1;
+  RKP_CSR_V2_FINISH = 2;
+}

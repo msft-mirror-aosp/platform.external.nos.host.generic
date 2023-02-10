@@ -79,15 +79,13 @@ typedef const void * const __private;
 #define APP_ID_AVB_TEST          0x11
 #define APP_ID_TRANSPORT_TEST    0x12
 #define APP_ID_FACEAUTH_TEST     0x13
+#define APP_ID_TEST              0x7f
 
 /* OR this with the APP_ID to request no-protobuf messages */
 #define APP_ID_NO_PROTO_FLAG     0x80
 
 /* No-protobuf app, experimental for now */
 #define APP_ID_WEAVER2           (APP_ID_WEAVER | APP_ID_NO_PROTO_FLAG)
-
-/* This app ID should only be used by tests. */
-#define APP_ID_TEST              0xff
 
 /****************************************************************************/
 /* Other command fields */
