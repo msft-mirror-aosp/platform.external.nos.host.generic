@@ -551,7 +551,8 @@ struct secure_channel_retry_count_persist_storage {
  *
  * @param args         GSA EC public_key + AES_GCM256("MSGA") + AES_GSC_TAG
  * @param arg_len      64 + 4 + 16 bytes = 84
- * @param reply        GSC EC public_key + AES_GCM256("MSGB") + AES_GSC_TAG OR 1 byte error state
+ * @param reply        GSC EC public_key + AES_GCM256("MSGB") + AES_GSC_TAG
+ *                     OR 1 byte error state
  * @param reply_len    64 + 4 + 16 bytes = 84 OR 1
  */
 
@@ -587,6 +588,29 @@ struct secure_channel_retry_count_persist_storage {
  *
  * @errors             APP_ERROR_BOGUS_ARGS
  */
+
+#define NUGGET_PARAM_SECURE_TRANSPORT_USECASE_HANDSHAKE 0x001d
+/*
+ * Secure transport usecase handshake command
+ *
+ * @param args         AES_GCM256(struct secure_transport_usecase) +
+ *                     AES_GCM_TAG_SIZE
+ * @param arg_len      64 + 16 = 80 bytes
+ * @param reply        AES_GCM256(struct secure_transport_usecase) +
+ *                     AES_GCM_TAG_SIZE OR 1 byte error state
+ * @param reply_len    64 + 16 = 80 OR 1 bytes
+ */
+
+#define NUGGET_PARAM_SECURE_TRANSPORT_TEST 0x001e
+/*
+ * Secure transport test command
+ *
+ * @param args         1008 (1024 - 16 bytes AES_TAG_SIZE) bytes test data
+ * @param arg_len      1008 bytes
+ * @param reply        1008 (1024 - 16 bytes AES_TAG_SIZE) bytes test data
+ * @param reply_len    1008 bytes
+ */
+
 /****************************************************************************/
 /* Test related commands */
 
