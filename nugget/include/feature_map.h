@@ -43,6 +43,7 @@ enum km_feature_list {
   km_feature_rkp = 3,
   km_feature_rkp_dice = 4,
   km_feature_dice = 5,
+  km_feature_multimei = 6,
 
   /* Please do not change numbers after they've been released */
 
