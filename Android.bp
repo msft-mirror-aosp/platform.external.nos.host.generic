@@ -137,6 +137,48 @@ cc_library_static {
     ],
 }
 
+// A special target to be statically linked into recovery which is a system
+// (not vendor) component.
+cc_library_static {
+    name: "libnos_citadel_for_recovery",
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+    ],
+    srcs: [
+        ":libnos_client",
+        "libnos_datagram/citadel.cpp",
+    ],
+    static_libs: [
+        "libnos_for_recovery",
+    ],
+    shared_libs: [
+        "libbase",
+    ],
+}
+
+// A special target to be statically linked into fastboot hal.
+cc_library_static {
+    name: "libnos_citadel_for_fastboot",
+    recovery: true,
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+    ],
+    srcs: [
+        ":libnos_client",
+        "libnos_datagram/citadel.cpp",
+    ],
+    static_libs: [
+        "libnos_for_fastboot",
+    ],
+    shared_libs: [
+        "libbase",
+    ],
+}
+
 // Language and vendor related defaults
 cc_defaults {
     name: "nos_cc_defaults",
@@ -178,6 +220,6 @@ cc_library {
         "nos_cc_defaults",
     ],
     shared_libs: [
-        "//vendor/google_nos/host/android:libnos_datagram_citadel",
+        "libnos_datagram_citadel",
     ],
 }
