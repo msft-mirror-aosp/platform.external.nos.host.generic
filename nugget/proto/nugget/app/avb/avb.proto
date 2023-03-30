@@ -43,7 +43,6 @@ service Avb {
   rpc GetOwnerKey (GetOwnerKeyRequest) returns (GetOwnerKeyResponse);
   rpc GetResetChallenge (GetResetChallengeRequest) returns (GetResetChallengeResponse);
   rpc ProductionResetTest (ProductionResetTestRequest) returns (ProductionResetTestResponse);
-  rpc GetCarrierLockName (GetCarrierLockNameRequest) returns (GetCarrierLockNameResponse);
 }
 
 enum LockIndex {
@@ -193,10 +192,3 @@ message ProductionResetTestResponse {}
 message BootloaderDoneRequest {}
 
 message BootloaderDoneResponse {}
-
-// Carrier lock name
-message GetCarrierLockNameRequest {}
-
-message GetCarrierLockNameResponse {
-  string name = 1;
-}
