@@ -9,6 +9,7 @@ cc_library(
         "nugget/include/feature_map.h",
         "nugget/include/flash_layout.h",
         "nugget/include/keymaster.h",
+        "nugget/include/nos/device.h",
         "nugget/include/signed_header.h",
     ],
     deps = [
