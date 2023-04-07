@@ -501,6 +501,7 @@ message SetSystemVersionInfoRequest {
   uint32 system_version = 1;  // getprop "ro.build.version.release"
   uint32 system_security_level = 2; // getprop "ro.build.version.security_patch"
   uint32 vendor_security_level = 3; // getprop "ro.vendor.build.security_patch"
+  uint32 vendor_api_level = 4;
 }
 
 message SetSystemVersionInfoResponse {
