@@ -49,12 +49,13 @@ struct citadel_ioc_tpm_datagram {
 
 /* GSA nos call request struct */
 struct gsa_ioc_nos_call_req {
-  __u8 app_id;
-  __u16 params;
-  __u32 arg_len;
-  __u64 buf;
-  __u32 reply_len;
-  __u32 call_status;
+    __u8 app_id;
+    __u8 reserved;
+    __u16 params;
+    __u32 arg_len;
+    __u64 buf;
+    __u32 reply_len;
+    __u32 call_status;
 };
 
 #define CITADEL_IOC_TPM_DATAGRAM    _IOW(CITADEL_IOC_MAGIC, 1, \
@@ -228,18 +229,21 @@ static void close_device(void *ctx) {
 }
 
 /* Detect if GSA kernel support nos_call interface
- * Returns 0 on success or negative on failure.
+ * Returns true on success or false on failure.
  */
-static int detect_gsa_nos_call_interface(int fd) {
+static bool detect_gsa_nos_call_interface(int fd) {
   int ret;
+  errno = 0;
 
   if (fd < 0) {
     ALOGE("invalid device handle (%d)", fd);
-    return -errno;
+    return false;
   }
 
+  /* Send app_id = 0 and params = 0 to detect GSA IOCTL interface */
   struct gsa_ioc_nos_call_req gsa_nos_call_req = {
-      .app_id = UINT8_MAX,
+      .app_id = 0,
+      .reserved = 0,
       .params = 0,
       .arg_len = 0,
       .buf = (unsigned long)gsa_nos_call_buf,
@@ -252,45 +256,12 @@ static int detect_gsa_nos_call_interface(int fd) {
       ALOGE("can't send GSA mbox command: %s", strerror(errno));
   }
 
-  return ret;
-}
-
-static bool use_one_pass_call(void *ctx, uint8_t app_id, uint16_t params) {
-  static bool already_check_gsa_ioctl_and_property = false;
-  static uint32_t first_api_level = 0;
-  static bool is_gsa_nos_call_supported = false;
-  bool use_gsa_nos_call = false;
-
-  if (!ctx) {
-    ALOGE("Invalid args to %s()", __func__);
+  /* GSA kernel is not support GSA_NOS_CALL if return EINVAL or ENOTTY */
+  if (!errno) {
+    return true;
+  } else {
     return false;
   }
-
-  if (!already_check_gsa_ioctl_and_property) {
-    int fd = *(int *)ctx;
-    int ret = detect_gsa_nos_call_interface(fd);
-    if (ret == 0) {
-      is_gsa_nos_call_supported = true;
-    }
-
-    first_api_level =
-        android::base::GetUintProperty<uint32_t>("ro.product.first_api_level", 0);
-
-    already_check_gsa_ioctl_and_property = true;
-  }
-
-  /* Switch to use GSA libnos_transport lib if has GSC and device launch with
-   * API level >= 33 (Android TM)
-   */
-  if (is_gsa_nos_call_supported && first_api_level >= 33) {
-    use_gsa_nos_call = true;
-
-    /* TODO(optional): support dynamically switch to use gsa nos_call if needed */
-    (void)app_id;
-    (void)params;
-  }
-
-  return use_gsa_nos_call;
 }
 
 static int one_pass_call(void *ctx, uint8_t app_id, uint16_t params,
@@ -303,6 +274,7 @@ static int one_pass_call(void *ctx, uint8_t app_id, uint16_t params,
 
   struct gsa_ioc_nos_call_req gsa_nos_call_req = {
       .app_id = app_id,
+      .reserved = 0,
       .params = params,
       .arg_len = arg_len,
       .buf = (unsigned long)gsa_nos_call_buf,
@@ -412,7 +384,7 @@ int nos_device_open(const char *device_name, struct nos_device *dev) {
     dev->ops.wait_for_interrupt = wait_for_interrupt;
     dev->ops.reset = reset;
     dev->ops.close = close_device;
-    dev->ops.use_one_pass_call = use_one_pass_call;
     dev->ops.one_pass_call = one_pass_call;
+    dev->use_one_pass_call = detect_gsa_nos_call_interface(fd);
     return 0;
 }
