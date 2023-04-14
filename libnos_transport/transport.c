@@ -485,7 +485,7 @@ uint32_t nos_call_application(const struct nos_device *dev,
   }
 
   // Call GSA nos_call IOCTL interface if needed
-  if (dev->ops.use_one_pass_call(dev->ctx, app_id, params)) {
+  if (dev->use_one_pass_call) {
     int err = dev->ops.one_pass_call(dev->ctx, app_id, params, args, arg_len,
                                      reply, reply_len, &status_code);
     if (err < 0) {
