@@ -75,14 +75,6 @@ struct nos_device_ops {
 
 #ifdef ANDROID
   /**
-   * use_one_pass_call: check if need to use one_pass_call or not.
-   *
-   * Return true if need to use one_pass_call.
-   * Otherwise use original nos_call_application() TPM commands.
-   */
-  bool (*use_one_pass_call)(void *ctx, uint8_t app_id, uint16_t params);
-
-  /**
    * one_pass_call: sending whole data payload directly to GSA FW
    * and rely on GSA libnos_transport library to communicate with GSC.
    *
@@ -99,6 +91,9 @@ struct nos_device {
   void *ctx;
   struct nos_device_ops ops;
   uint32_t config;
+#ifdef ANDROID
+  bool use_one_pass_call;
+#endif
 };
 
 /*
