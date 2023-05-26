@@ -461,6 +461,7 @@ uint32_t nos_call_application(const struct nos_device *dev,
                               uint8_t *reply, uint32_t *reply_len)
 {
   uint32_t res;
+  uint32_t status_code;
   const struct transport_context ctx = {
     .dev = dev,
     .app_id = app_id,
@@ -477,10 +478,28 @@ uint32_t nos_call_application(const struct nos_device *dev,
     return APP_ERROR_IO;
   }
 
+#ifdef ANDROID
+  if (!dev) {
+    NLOGE("Invalid args to %s()", __func__);
+    return APP_ERROR_IO;
+  }
+
+  // Call GSA nos_call IOCTL interface if needed
+  if (dev->use_one_pass_call) {
+    int err = dev->ops.one_pass_call(dev->ctx, app_id, params, args, arg_len,
+                                     reply, reply_len, &status_code);
+    if (err < 0) {
+      NLOGE("one_pass_call failed: %s", strerror(-err));
+      status_code = APP_ERROR_IO;
+    }
+
+    return status_code;
+  }
+#endif
+
   NLOGD("Calling App 0x%02x with params 0x%04x", app_id, params);
 
   struct transport_status status;
-  uint32_t status_code;
   int retries = CRC_RETRY_COUNT;
   while (retries--) {
     /* Wake up and wait for Citadel to be ready */
