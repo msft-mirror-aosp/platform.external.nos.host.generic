@@ -29,8 +29,9 @@ extern "C" {
 
 /* App-specific errors (across all commands) */
 enum {
-  NUGGET_ERROR_LOCKED = APP_SPECIFIC_ERROR,
+  NUGGET_ERROR_LOCKED = APP_SPECIFIC_ERROR + 0,
   NUGGET_ERROR_RETRY,
+  NUGGET_ERROR_VERIFY,
 };
 
 /****************************************************************************/
