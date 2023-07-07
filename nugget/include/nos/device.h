@@ -16,6 +16,9 @@
 #ifndef NOS_DEVICE_H
 #define NOS_DEVICE_H
 
+#ifdef ANDROID
+#include <stdbool.h>
+#endif
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -69,12 +72,28 @@ struct nos_device_ops {
    * The device must not be used after closing.
    */
   void (*close)(void *ctx);
+
+#ifdef ANDROID
+  /**
+   * one_pass_call: sending whole data payload directly to GSA FW
+   * and rely on GSA libnos_transport library to communicate with GSC.
+   *
+   * Return 0 on success. A negative value on I/O failure.
+   */
+  int (*one_pass_call)(void *ctx, uint8_t app_id, uint16_t params,
+                       const uint8_t *args, uint32_t arg_len,
+                       uint8_t *reply, uint32_t *reply_len,
+                       uint32_t *status_code);
+#endif
 };
 
 struct nos_device {
   void *ctx;
   struct nos_device_ops ops;
   uint32_t config;
+#ifdef ANDROID
+  bool use_one_pass_call;
+#endif
 };
 
 /*
