@@ -154,6 +154,10 @@ service Keymaster {
    */
   rpc ExportDeviceIds(ExportDeviceIdsRequest) returns (ExportDeviceIdsResponse);
 
+  /*
+   * RKP v3 implementation
+   */
+  rpc GenerateRkpCsrV2(GenerateRkpCsrV2Request) returns (GenerateRkpCsrV2Response);
   // These are implemented with a enum, so new RPCs must be appended, and
   // deprecated RPCs need placeholders.
 }
@@ -436,6 +440,7 @@ message ProvisionDeviceIdsRequest {
   bytes product_model = 6;
   bytes imei = 7;
   bytes meid = 8;
+  bytes imei2 = 9;
 }
 message ProvisionDeviceIdsResponse {
   // Specified in keymaster_defs.proto:ErrorCode
@@ -496,6 +501,7 @@ message SetSystemVersionInfoRequest {
   uint32 system_version = 1;  // getprop "ro.build.version.release"
   uint32 system_security_level = 2; // getprop "ro.build.version.security_patch"
   uint32 vendor_security_level = 3; // getprop "ro.vendor.build.security_patch"
+  uint32 vendor_api_level = 4;
 }
 
 message SetSystemVersionInfoResponse {
@@ -634,4 +640,19 @@ message GenerateRkpCsrResponse{
   bytes keys_to_sign_mac = 2;
   bytes device_info_blob = 3;
   bytes protected_data_blob = 4;
+}
+
+message GenerateRkpCsrV2Request{
+  RkpCsrV2Operation step = 1;
+  bytes challenge = 2;
+  uint32 num_of_public_keys = 3;
+  MacedKey key_to_sign = 4;
+  OperationHandle handle = 5;
+}
+message GenerateRkpCsrV2Response{
+  ErrorCode error_code = 1;
+  OperationHandle handle = 2;
+  bytes device_info_blob = 3;
+  bytes dice_cert_chain = 4;
+  bytes signature = 5;
 }
