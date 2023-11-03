@@ -26,7 +26,11 @@ package {
 genrule {
     name: "nos_app_weaver_service_genc++",
     out: ["Weaver.client.cpp"],
-    srcs: ["weaver.proto"],
+    srcs: [
+        "weaver.proto",
+        ":nugget_options_proto",
+        ":libprotobuf-internal-protos",
+    ],
     tools: ["aprotoc", "protoc-gen-nos-client-cpp"],
     cmd: GEN_SERVICE_SOURCE,
 }
@@ -34,7 +38,11 @@ genrule {
 genrule {
     name: "nos_app_weaver_service_genc++_headers",
     out: ["Weaver.client.h"],
-    srcs: ["weaver.proto"],
+    srcs: [
+        "weaver.proto",
+        ":nugget_options_proto",
+        ":libprotobuf-internal-protos",
+    ],
     tools: ["aprotoc", "protoc-gen-nos-client-cpp"],
     cmd: GEN_SERVICE_HEADER,
 }
@@ -42,7 +50,11 @@ genrule {
 genrule {
     name: "nos_app_weaver_service_genc++_mock",
     out: ["MockWeaver.client.h"],
-    srcs: ["weaver.proto"],
+    srcs: [
+        "weaver.proto",
+        ":nugget_options_proto",
+        ":libprotobuf-internal-protos",
+    ],
     tools: ["aprotoc", "protoc-gen-nos-client-cpp"],
     cmd: GEN_SERVICE_MOCK,
 }
