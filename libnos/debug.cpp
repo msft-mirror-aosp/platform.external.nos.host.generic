@@ -41,8 +41,8 @@ std::string StatusCodeString(uint32_t code) {
         return "APP_LINE_NUMBER " + std::to_string(code - APP_LINE_NUMBER_BASE);
       }
       if (code >= APP_SPECIFIC_ERROR && code < APP_LINE_NUMBER_BASE) {
-        return "APP_SPECIFIC_ERROR " + std::to_string(APP_LINE_NUMBER_BASE) +
-            " + " + std::to_string(code - APP_LINE_NUMBER_BASE);
+        return "APP_SPECIFIC_ERROR + " +
+               std::to_string(code - APP_SPECIFIC_ERROR);
       }
 
       return "unknown";
