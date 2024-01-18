@@ -58,6 +58,14 @@ enum nugget_feature_list {
   nugget_feature_max = FEATURE_MASK,  // 24-bit FEATURE_FIELD
 };
 
+enum avb_feature_list {
+  avb_feature_api_no_proto = 0,
+
+  /* Please do not change numbers after they've been released */
+
+  avb_feature_max = FEATURE_MASK,  // 24-bit FEATURE_FIELD
+};
+
 enum weaver_feature_list {
   weaver_feature_api_no_proto = 0,
 
