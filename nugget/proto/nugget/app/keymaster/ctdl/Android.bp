@@ -23,11 +23,14 @@ package {
     default_applicable_licenses: ["external_nos_host_generic_license"],
 }
 
+// For keymaster 3/4/4.1 @ citadel
 genrule {
-    name: "nos_app_weaver_service_genc++",
-    out: ["Weaver.client.cpp"],
+    name: "nos_app_keymaster_service_ctdl_genc++",
+    out: ["Keymaster.client.cpp"],
     srcs: [
-        "weaver.proto",
+        "keymaster.proto",
+        "keymaster_defs.proto",
+        "keymaster_types.proto",
         ":nugget_options_proto",
         ":libprotobuf-internal-protos",
     ],
@@ -36,10 +39,12 @@ genrule {
 }
 
 genrule {
-    name: "nos_app_weaver_service_genc++_headers",
-    out: ["Weaver.client.h"],
+    name: "nos_app_keymaster_service_ctdl_genc++_headers",
+    out: ["Keymaster.client.h"],
     srcs: [
-        "weaver.proto",
+        "keymaster.proto",
+        "keymaster_defs.proto",
+        "keymaster_types.proto",
         ":nugget_options_proto",
         ":libprotobuf-internal-protos",
     ],
@@ -48,10 +53,12 @@ genrule {
 }
 
 genrule {
-    name: "nos_app_weaver_service_genc++_mock",
-    out: ["MockWeaver.client.h"],
+    name: "nos_app_keymaster_service_ctdl_genc++_mock",
+    out: ["MockKeymaster.client.h"],
     srcs: [
-        "weaver.proto",
+        "keymaster.proto",
+        "keymaster_defs.proto",
+        "keymaster_types.proto",
         ":nugget_options_proto",
         ":libprotobuf-internal-protos",
     ],
@@ -60,9 +67,9 @@ genrule {
 }
 
 cc_library {
-    name: "nos_app_weaver",
-    generated_sources: ["nos_app_weaver_service_genc++"],
-    generated_headers: ["nos_app_weaver_service_genc++_headers"],
+    name: "nos_app_keymaster_ctdl",
+    generated_sources: ["nos_app_keymaster_service_ctdl_genc++"],
+    generated_headers: ["nos_app_keymaster_service_ctdl_genc++_headers"],
     defaults: ["nos_app_service_defaults"],
-    export_generated_headers: ["nos_app_weaver_service_genc++_headers"],
+    export_generated_headers: ["nos_app_keymaster_service_ctdl_genc++_headers"],
 }
