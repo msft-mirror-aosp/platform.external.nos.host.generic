@@ -50,6 +50,14 @@ enum km_feature_list {
   km_feature_max = FEATURE_MASK,  // 24-bit FEATURE_FIELD
 };
 
+enum nugget_feature_list {
+  nugget_feature_test_image = 0,
+
+  /* Please do not change numbers after they've been released */
+
+  nugget_feature_max = FEATURE_MASK,  // 24-bit FEATURE_FIELD
+};
+
 enum weaver_feature_list {
   weaver_feature_api_no_proto = 0,
 
