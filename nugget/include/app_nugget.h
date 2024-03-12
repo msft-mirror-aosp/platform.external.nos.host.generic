@@ -462,10 +462,27 @@ struct gsa_gsc_psk_persist_storage {
 /*
  * GSA key provision command
  *
- * @param args         gsa unique public key
+ * We use the same command id to support multiple GSA-GSC PSK
+ * provision handshaking. List possible args and reply usage by
+ * each case.
+ *
+ * Non-secure PSK provision case:
+ * @param args         GSA-GSC PSK (plaintext)
  * @param arg_len      32
- * @param reply        gsc public key + sha256(pre-shared key)
- * @param reply_len    64 + 32
+ * @param reply        GSA-GSC PSK (plaintext)
+ * @param reply_len    32
+ *
+ * Ephemeral ec key handshaking case:
+ * @param args         GSA public key
+ * @param arg_len      64
+ * @param reply        GSC public key + signature
+ * @param reply_len    64 + 64
+ *
+ * Secure PSK provision case:
+ * @param args         encrypted GSA-GSC PSK (nonce + PSK + tag)
+ * @param arg_len      12 + 32 + 16
+ * @param reply        <none>
+ * @param reply_len    0
  */
 
 /**
