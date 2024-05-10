@@ -16,7 +16,7 @@
 
 syntax = "proto3";
 
-package nugget.app.keymaster;
+package nugget.app.keymaster.ctdl;
 
 /*
  * Minimal type definitions required for building protos.  Sourced from:

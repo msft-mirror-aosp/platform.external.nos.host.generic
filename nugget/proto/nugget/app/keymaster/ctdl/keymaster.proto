@@ -16,10 +16,10 @@
 
 syntax = "proto3";
 
-package nugget.app.keymaster;
+package nugget.app.keymaster.ctdl;
 
-import "nugget/app/keymaster/keymaster_defs.proto";
-import "nugget/app/keymaster/keymaster_types.proto";
+import "nugget/app/keymaster/ctdl/keymaster_defs.proto";
+import "nugget/app/keymaster/ctdl/keymaster_types.proto";
 import "nugget/protobuf/options.proto";
 
 /*

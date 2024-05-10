@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-syntax = "proto3";
+#pragma once
 
-package nugget.app.identity;
+#include <app_nugget.h>
+#include <application.h>
+#include <feature_map.h>
+#include <nos/NuggetClientInterface.h>
 
-import "nugget/app/identity/identity_defs.proto";
+namespace nos {
 
-message Result {
-  ResultCode result_code = 1;
-  string message = 2;
-}
+bool has_feature(NuggetClientInterface& nug, enum feature_support_app_id app_id,
+                 uint32_t feature);
 
-message AccessResult {
-  EicAccessCheckResult access_result = 1;
-  string message = 2;
-}
+}  // namespace nos

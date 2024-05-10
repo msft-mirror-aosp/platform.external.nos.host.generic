@@ -24,17 +24,16 @@
 #include <google/protobuf/compiler/code_generator.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/io/zero_copy_stream.h>
-#include <google/protobuf/stubs/strutil.h>
 
+#include "absl/strings/strip.h"
+#include "absl/strings/str_cat.h"
+#include "absl/strings/str_join.h"
+#include "absl/strings/str_split.h"
 #include "nugget/protobuf/options.pb.h"
 
 using ::google::protobuf::FileDescriptor;
-using ::google::protobuf::JoinStrings;
 using ::google::protobuf::MethodDescriptor;
 using ::google::protobuf::ServiceDescriptor;
-using ::google::protobuf::Split;
-using ::google::protobuf::SplitStringUsing;
-using ::google::protobuf::StripSuffixString;
 using ::google::protobuf::compiler::CodeGenerator;
 using ::google::protobuf::compiler::OutputDirectory;
 using ::google::protobuf::io::Printer;
@@ -61,8 +60,8 @@ std::string validateServiceOptions(const ServiceDescriptor& service) {
 
 template <typename Descriptor>
 std::vector<std::string> Packages(const Descriptor& descriptor) {
-    std::vector<std::string> namespaces;
-    SplitStringUsing(descriptor.full_name(), ".", &namespaces);
+    std::vector<std::string> namespaces =
+        absl::StrSplit(descriptor.full_name(), '.');
     namespaces.pop_back(); // just take the package
     return namespaces;
 }
@@ -73,23 +72,21 @@ std::string FullyQualifiedIdentifier(const Descriptor& descriptor) {
     if (namespaces.empty()) {
         return "::" + descriptor.name();
     } else {
-        std::string namespace_path;
-        JoinStrings(namespaces, "::", &namespace_path);
-        return "::" + namespace_path + "::" + descriptor.name();
+        return absl::StrCat("::", absl::StrJoin(namespaces, "::"), "::", descriptor.name());
     }
 }
 
 template <typename Descriptor>
 std::string FullyQualifiedHeader(const Descriptor& descriptor) {
-    const auto packages = Packages(descriptor);
-    const auto file = Split(descriptor.file()->name(), "/").back();
-    const auto header = StripSuffixString(file, ".proto") + ".pb.h";
+    const std::vector<std::string> packages = Packages(descriptor);
+    const std::vector<std::string_view> path_components =
+        absl::StrSplit(descriptor.file()->name(), '/');
+    const std::string file(path_components.back());
+    const std::string header = absl::StrCat(absl::StripSuffix(file, ".proto"), ".pb.h");
     if (packages.empty()) {
         return header;
     } else {
-        std::string package_path;
-        JoinStrings(packages, "/", &package_path);
-        return package_path + "/" + header;
+        return absl::StrCat(absl::StrJoin(packages, "/"), "/", header);
     }
 }
 
@@ -240,7 +237,7 @@ void GenerateClientSource(Printer& printer, const ServiceDescriptor& service) {
         methodVars.insert(vars.begin(), vars.end());
         printer.Print(methodVars, R"(
 uint32_t $class$::$method_name$(const $method_input_type$& request, $method_output_type$* response) {
-    const size_t request_size = request.ByteSize();
+    const size_t request_size = request.ByteSizeLong();
     if (request_size > $max_request_size$) {
         return APP_ERROR_TOO_MUCH;
     }
@@ -270,6 +267,8 @@ uint32_t $class$::$method_name$(const $method_input_type$& request, $method_outp
 class CppNuggetServiceClientGenerator : public CodeGenerator {
 public:
     CppNuggetServiceClientGenerator() = default;
+    CppNuggetServiceClientGenerator(const CppNuggetServiceClientGenerator&) = delete;
+    CppNuggetServiceClientGenerator& operator=(const CppNuggetServiceClientGenerator&) = delete;
     ~CppNuggetServiceClientGenerator() override = default;
 
     bool Generate(const FileDescriptor* file,
@@ -307,9 +306,6 @@ public:
 
         return true;
     }
-
-private:
-    GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(CppNuggetServiceClientGenerator);
 };
 
 } // namespace
