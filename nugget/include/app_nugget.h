@@ -373,7 +373,7 @@ enum nugget_sjtag_avb_boot_lock_result {
 
 /*
  * Persistent storage of arbitrary data, up to
- * (FS_MAX_FILE_SIZE - sizeof(struct nugget_app_data)) bytes.
+ * (FS_MAX_ENC_FILE_SIZE - sizeof(struct nugget_app_data)) bytes.
  */
 struct nugget_app_storage {
   uint32_t flags; /* TBD, use zero for now */
