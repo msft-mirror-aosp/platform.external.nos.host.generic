@@ -16,7 +16,7 @@
 
 syntax = "proto3";
 
-package nugget.app.keymaster;
+package nugget.app.keymaster.ctdl;
 
 /*
  * Minimal type definitions required for building protos.  Sourced from:
@@ -337,11 +337,4 @@ enum RkpCsrV2Operation {
   RKP_CSR_V2_BEGIN = 0;
   RKP_CSR_V2_UPDATE = 1;
   RKP_CSR_V2_FINISH = 2;
-}
-
-enum ImportWrappedKeyOperation {
-  IMPORT_WRAPPED_ASYM_KEY_RESERVED = 0;
-  IMPORT_WRAPPED_ASYM_KEY_BEGIN = 1;
-  IMPORT_WRAPPED_ASYM_KEY_UPDATE = 2;
-  IMPORT_WRAPPED_ASYM_KEY_FINISH = 3;
 }
