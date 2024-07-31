@@ -16,6 +16,8 @@
 
 #include <nos/feature.h>
 
+#include <cstring>
+
 namespace nos {
 
 bool has_feature(NuggetClientInterface& nug, enum feature_support_app_id app_id,
