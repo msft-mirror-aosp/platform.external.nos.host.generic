@@ -79,7 +79,7 @@ std::string FullyQualifiedIdentifier(const Descriptor& descriptor) {
 template <typename Descriptor>
 std::string FullyQualifiedHeader(const Descriptor& descriptor) {
     const std::vector<std::string> packages = Packages(descriptor);
-    const std::vector<std::string_view> path_components =
+    const std::vector<std::string> path_components =
         absl::StrSplit(descriptor.file()->name(), '/');
     const std::string file(path_components.back());
     const std::string header = absl::StrCat(absl::StripSuffix(file, ".proto"), ".pb.h");
