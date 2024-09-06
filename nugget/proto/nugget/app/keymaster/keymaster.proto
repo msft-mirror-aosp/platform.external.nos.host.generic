@@ -208,6 +208,7 @@ message ImportKeyResponse {
   ErrorCode error_code = 1;
   KeyBlob blob = 2;
   KeyCharacteristics characteristics = 3;
+  OperationHandle handle = 4;
 };
 
 // ExportKey
@@ -364,6 +365,8 @@ message ImportWrappedKeyRequest {
   KeyBlob wrapping_key_blob = 8;
   bytes masking_key = 9;             // Fixed sized array.
   uint64 creation_time_ms = 10;      // Rough current time (ms since epoch).
+  ImportWrappedKeyOperation step = 11;
+  OperationHandle handle = 12;
 }
 // ImportWrappedKey returns a ImportKeyResponse.
 
