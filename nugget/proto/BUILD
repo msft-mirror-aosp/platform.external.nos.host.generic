@@ -1,6 +1,7 @@
 package(default_visibility = ["//visibility:public"])
 
-exports_files(glob(["*.proto"]))
+exports_files(glob(["nugget/app/**/*.options"]))
+
 
 ################################################################################
 # proto cc libraries
