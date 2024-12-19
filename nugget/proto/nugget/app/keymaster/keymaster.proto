@@ -158,6 +158,12 @@ service Keymaster {
    * RKP v3 implementation
    */
   rpc GenerateRkpCsrV2(GenerateRkpCsrV2Request) returns (GenerateRkpCsrV2Response);
+
+  /*
+   * V4 of the HAL.
+   */
+  rpc SetAdditionalAttestationInfo(SetAdditionalAttestationInfoRequest)
+      returns (SetAdditionalAttestationInfoResponse);
   // These are implemented with a enum, so new RPCs must be appended, and
   // deprecated RPCs need placeholders.
 }
@@ -658,4 +664,12 @@ message GenerateRkpCsrV2Response{
   bytes device_info_blob = 3;
   bytes dice_cert_chain = 4;
   bytes signature = 5;
+}
+
+message SetAdditionalAttestationInfoRequest{
+  KeyParameters params = 1;
+}
+
+message SetAdditionalAttestationInfoResponse{
+  ErrorCode error_code = 1;
 }
