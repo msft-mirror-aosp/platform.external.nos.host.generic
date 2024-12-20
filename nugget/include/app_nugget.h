@@ -674,6 +674,21 @@ enum nugget_app_selftest_cmd {
  * AP-side implementation to translate into the info required for the power
  * stats service.
  */
+struct nugget_app_low_power_stats_v0 { /* version 0 */
+  /* All times in usecs */
+  uint64_t hard_reset_count;                    /* Cleared by power loss */
+  uint64_t time_since_hard_reset;
+  /* Below are only since the last hard reset */
+  uint64_t wake_count;
+  uint64_t time_at_last_wake;
+  uint64_t time_spent_awake;
+  uint64_t deep_sleep_count;
+  uint64_t time_at_last_deep_sleep;
+  uint64_t time_spent_in_deep_sleep;
+  uint64_t time_at_ap_reset;
+  uint64_t time_at_ap_bootloader_done;
+} __packed;
+
 #define NUGGET_APP_LOW_POWER_STATS_MAGIC 0xC0DEACE1
 struct nugget_app_low_power_stats { /* version 1 */
   /* All times in usecs */
