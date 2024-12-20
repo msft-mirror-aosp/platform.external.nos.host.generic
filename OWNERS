@@ -5,3 +5,4 @@ wfrichar@google.com
 tommychiu@google.com
 zhakevin@google.com
 kroot@google.com
+include platform/system/core:/janitors/OWNERS #{LAST_RESORT_SUGGESTION}
