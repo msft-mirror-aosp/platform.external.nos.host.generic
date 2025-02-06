@@ -63,7 +63,7 @@ enum event_id {
   EVENT_ALERT = 1,         // Globalsec alert fired.
   EVENT_REBOOTED = 2,      // Device rebooted.
   EVENT_UPGRADED = 3,      // Device has upgraded.
-  EVENT_ALERT_V2 = 4,      // Globalsec Alertv2 fired
+  EVENT_ALERT_V2 = 4,      // Globalsec Alertv2 fired (Dauntless)
   EVENT_SEC_CH_STATE = 5,  // Update GSA-GSC secure channel state.
   EVENT_V1_NO_SUPPORT =
       6  // Report a VXX event that can't fit in struct event_report.
@@ -75,7 +75,11 @@ enum event_id {
 enum upgrade_state_def {
   UPGRADE_SUCCESS = 0,
   UPGRADE_PW_MISMATCH = 1,
-  UPGRADE_EN_FW_FAIL =2,
+  UPGRADE_EN_FW_FAIL = 2,
+  /* Extended defines to distinguish RO upgrades from RW ones */
+  UPGRADE_SUCCESS_RO = 3,
+  UPGRADE_PW_MISMATCH_RO = 4,
+  UPGRADE_EN_FW_FAIL_RO = 5,
 };
 
 /*
