@@ -82,7 +82,7 @@ typedef const void * const __private;
 #define APP_ID_TEST              0x7f
 
 /* OR this with the APP_ID to request no-protobuf messages */
-#define APP_ID_NO_PROTO_FLAG     0x80
+#define APP_ID_NO_PROTO_FLAG     0x80u
 
 /* No-protobuf app, experimental for now */
 #define APP_ID_WEAVER2           (APP_ID_WEAVER | APP_ID_NO_PROTO_FLAG)

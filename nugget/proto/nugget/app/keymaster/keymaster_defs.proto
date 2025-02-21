@@ -100,6 +100,7 @@ enum Tag {
   IDENTITY_CREDENTIAL_KEY = 0x702d1;    // (TagType:BOOL | 721)
   STORAGE_KEY = 0x702d2;                // (TagType:BOOL | 722)
   ATTESTATION_ID_SECOND_IMEI = 0x902d3; // (TagType:BYTES | 723)
+  MODULE_HASH = 0x902d4; // (TagType:BYTES | 724)
   ASSOCIATED_DATA = 0x903e8; // (TagType:BYTES | 1000)
   NONCE = 0x903e9; // (TagType:BYTES | 1001)
   /* RESERVED: AUTH_TOKEN = 0x903ea; // (TagType:BYTES | 1002) */
@@ -272,6 +273,7 @@ enum ErrorCode {
   PRODUCTION_KEY_IN_TEST_REQUEST = 85;    // RKP specific.
   TEST_KEY_IN_PRODUCTION_REQUEST = 86;    // RKP specific.
   INVALID_EEK = 87;                       // RKP specific.
+  MODULE_HASH_ALREADY_SET = 88;
 };
 
 enum SecurityLevel {
@@ -337,4 +339,11 @@ enum RkpCsrV2Operation {
   RKP_CSR_V2_BEGIN = 0;
   RKP_CSR_V2_UPDATE = 1;
   RKP_CSR_V2_FINISH = 2;
+}
+
+enum ImportWrappedKeyOperation {
+  IMPORT_WRAPPED_ASYM_KEY_RESERVED = 0;
+  IMPORT_WRAPPED_ASYM_KEY_BEGIN = 1;
+  IMPORT_WRAPPED_ASYM_KEY_UPDATE = 2;
+  IMPORT_WRAPPED_ASYM_KEY_FINISH = 3;
 }

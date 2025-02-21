@@ -26,7 +26,13 @@ package {
 genrule {
     name: "nos_app_identity_service_genc++",
     out: ["Identity.client.cpp"],
-    srcs: ["identity.proto"],
+    srcs: [
+        "identity.proto",
+        "identity_defs.proto",
+        "identity_types.proto",
+        ":nugget_options_proto",
+        ":libprotobuf-internal-protos",
+    ],
     tools: ["aprotoc", "protoc-gen-nos-client-cpp"],
     cmd: GEN_SERVICE_SOURCE,
 }
@@ -34,7 +40,13 @@ genrule {
 genrule {
     name: "nos_app_identity_service_genc++_headers",
     out: ["Identity.client.h"],
-    srcs: ["identity.proto"],
+    srcs: [
+        "identity.proto",
+        "identity_defs.proto",
+        "identity_types.proto",
+        ":nugget_options_proto",
+        ":libprotobuf-internal-protos",
+    ],
     tools: ["aprotoc", "protoc-gen-nos-client-cpp"],
     cmd: GEN_SERVICE_HEADER,
 }
@@ -42,7 +54,13 @@ genrule {
 genrule {
     name: "nos_app_identity_service_genc++_mock",
     out: ["MockIdentity.client.h"],
-    srcs: ["identity.proto"],
+    srcs: [
+        "identity.proto",
+        "identity_defs.proto",
+        "identity_types.proto",
+        ":nugget_options_proto",
+        ":libprotobuf-internal-protos",
+    ],
     tools: ["aprotoc", "protoc-gen-nos-client-cpp"],
     cmd: GEN_SERVICE_MOCK,
 }

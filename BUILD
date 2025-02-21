@@ -24,6 +24,7 @@ cc_library(
     hdrs = [
         "nugget/include/hals/common.h",
         "nugget/include/hals/weaver.h",
+        "nugget/include/hals/avb.h",
     ],
     strip_include_prefix = "nugget/include/",
     visibility = ["//visibility:public"],

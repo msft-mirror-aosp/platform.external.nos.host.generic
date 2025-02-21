@@ -43,3 +43,8 @@ cc_library {
     },
 
 }
+
+filegroup {
+    name: "nugget_options_proto",
+    srcs:  ["nugget/protobuf/options.proto"],
+}

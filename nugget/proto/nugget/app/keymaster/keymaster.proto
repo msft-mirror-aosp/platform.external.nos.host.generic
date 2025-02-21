@@ -158,6 +158,12 @@ service Keymaster {
    * RKP v3 implementation
    */
   rpc GenerateRkpCsrV2(GenerateRkpCsrV2Request) returns (GenerateRkpCsrV2Response);
+
+  /*
+   * V4 of the HAL.
+   */
+  rpc SetAdditionalAttestationInfo(SetAdditionalAttestationInfoRequest)
+      returns (SetAdditionalAttestationInfoResponse);
   // These are implemented with a enum, so new RPCs must be appended, and
   // deprecated RPCs need placeholders.
 }
@@ -208,6 +214,7 @@ message ImportKeyResponse {
   ErrorCode error_code = 1;
   KeyBlob blob = 2;
   KeyCharacteristics characteristics = 3;
+  OperationHandle handle = 4;
 };
 
 // ExportKey
@@ -364,6 +371,8 @@ message ImportWrappedKeyRequest {
   KeyBlob wrapping_key_blob = 8;
   bytes masking_key = 9;             // Fixed sized array.
   uint64 creation_time_ms = 10;      // Rough current time (ms since epoch).
+  ImportWrappedKeyOperation step = 11;
+  OperationHandle handle = 12;
 }
 // ImportWrappedKey returns a ImportKeyResponse.
 
@@ -501,6 +510,7 @@ message SetSystemVersionInfoRequest {
   uint32 system_version = 1;  // getprop "ro.build.version.release"
   uint32 system_security_level = 2; // getprop "ro.build.version.security_patch"
   uint32 vendor_security_level = 3; // getprop "ro.vendor.build.security_patch"
+  uint32 vendor_api_level = 4;
 }
 
 message SetSystemVersionInfoResponse {
@@ -654,4 +664,12 @@ message GenerateRkpCsrV2Response{
   bytes device_info_blob = 3;
   bytes dice_cert_chain = 4;
   bytes signature = 5;
+}
+
+message SetAdditionalAttestationInfoRequest{
+  KeyParameters params = 1;
+}
+
+message SetAdditionalAttestationInfoResponse{
+  ErrorCode error_code = 1;
 }

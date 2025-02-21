@@ -30,6 +30,9 @@ cc_binary_host {
         "nos_proto_defaults",
         "nos_cc_defaults",
     ],
-    static_libs: ["libnosprotos"],
+    static_libs: [
+        "libabsl_host",
+        "libnosprotos",
+    ],
     shared_libs: ["libprotoc"],
 }

@@ -17,12 +17,13 @@
 #ifndef NOS_NUGGET_CLIENT_DEBUGGABLE_H
 #define NOS_NUGGET_CLIENT_DEBUGGABLE_H
 
+#include <nos/NuggetClient.h>
+#include <nos/device.h>
+
 #include <cstdint>
+#include <functional>
 #include <string>
 #include <vector>
-
-#include <nos/device.h>
-#include <nos/NuggetClient.h>
 
 namespace nos {
 

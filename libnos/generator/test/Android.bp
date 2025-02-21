@@ -26,7 +26,11 @@ package {
 genrule {
     name: "nos_generator_test_service_genc++",
     out: ["Hello.client.cpp"],
-    srcs: ["nos/generator/test/test.proto"],
+    srcs: [
+        "nos/generator/test/test.proto",
+        ":nugget_options_proto",
+        ":libprotobuf-internal-protos",
+    ],
     tools: ["aprotoc", "protoc-gen-nos-client-cpp"],
     cmd: GEN_SERVICE_SOURCE + "-Iexternal/nos/host/generic/libnos/generator/test",
 }
@@ -34,7 +38,11 @@ genrule {
 genrule {
     name: "nos_generator_test_service_genc++_headers",
     out: ["Hello.client.h"],
-    srcs: ["nos/generator/test/test.proto"],
+    srcs: [
+        "nos/generator/test/test.proto",
+        ":nugget_options_proto",
+        ":libprotobuf-internal-protos",
+    ],
     tools: ["aprotoc", "protoc-gen-nos-client-cpp"],
     cmd: GEN_SERVICE_HEADER + "-Iexternal/nos/host/generic/libnos/generator/test",
 }
@@ -42,7 +50,11 @@ genrule {
 genrule {
     name: "nos_generator_test_service_genc++_mock",
     out: ["MockHello.client.h"],
-    srcs: ["nos/generator/test/test.proto"],
+    srcs: [
+        "nos/generator/test/test.proto",
+        ":nugget_options_proto",
+        ":libprotobuf-internal-protos",
+    ],
     tools: ["aprotoc", "protoc-gen-nos-client-cpp"],
     cmd: GEN_SERVICE_MOCK + "-Iexternal/nos/host/generic/libnos/generator/test",
 }

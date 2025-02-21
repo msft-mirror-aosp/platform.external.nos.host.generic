@@ -18,7 +18,6 @@ syntax = "proto3";
 
 package nugget.app.identity;
 
-import "nugget/protobuf/options.proto";
 import "nugget/app/identity/identity_defs.proto";
 
 message Result {
