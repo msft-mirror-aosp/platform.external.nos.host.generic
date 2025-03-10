@@ -66,7 +66,9 @@ enum event_id {
   EVENT_ALERT_V2 = 4,      // Globalsec Alertv2 fired (Dauntless)
   EVENT_SEC_CH_STATE = 5,  // Update GSA-GSC secure channel state.
   EVENT_V1_NO_SUPPORT =
-      6  // Report a VXX event that can't fit in struct event_report.
+      6,  // Report a VXX event that can't fit in struct event_report.
+  EVENT_ALERT_V3_SUMMARY = 7,  // Report an AlertV3 summary
+  EVENT_ALERT_V3_EVENT = 8,    // Report an AlertV3 event
 };
 
 /*
