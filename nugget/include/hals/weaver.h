@@ -99,8 +99,8 @@ enum nos2_weaver_read_status {
 struct nos2_weaver_read_response {
   struct nos2_cmd_hal hal;
 
-  uint32_t timeout;
   uint32_t status;  /* enum nos2_weaver_read_status, but of specified size */
+  uint64_t timeout64; /* in milliseconds for some reason */
   /* Put potentially variable-length members at the end. It's NOT, though */
   nos2_weaver_value_t value;
 };
