@@ -70,8 +70,9 @@ message ReadResponse {
   }
 
   Error error = 1;
-  uint32 throttle_msec = 2;
+  uint32 throttle32 = 2;  // deprecated
   bytes value = 3;
+  uint64 throttle64 = 4;  // preferred
 }
 
 // EraseValue
