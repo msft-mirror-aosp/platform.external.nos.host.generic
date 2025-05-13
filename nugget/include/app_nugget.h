@@ -629,6 +629,21 @@ struct secure_channel_retry_count_persist_storage {
  * @param reply_len    1008 bytes
  */
 
+#define MAX_ENTROPY_SIZE 2048
+
+#define NUGGET_PARAM_GET_ENTROPY 0x001f
+/*
+ * Get entropy.
+ *
+ * @param args         size of the entropy to get, should be in (0,
+ * MAX_ENTROPY_SIZE]
+ * @param arg_len      4 bytes
+ * @param reply        the entropy
+ * @param reply_len    size of the entropy from args
+ *
+ * @errors             APP_ERROR_BOGUS_ARGS, APP_ERROR_INTERNAL
+ */
+
 /****************************************************************************/
 /* Test related commands */
 
