@@ -274,6 +274,7 @@ enum ErrorCode {
   TEST_KEY_IN_PRODUCTION_REQUEST = 86;    // RKP specific.
   INVALID_EEK = 87;                       // RKP specific.
   MODULE_HASH_ALREADY_SET = 88;
+  STATUS_REMOVED = 89;                    // RKP specific
 };
 
 enum SecurityLevel {
