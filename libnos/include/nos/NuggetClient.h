@@ -60,6 +60,14 @@ public:
     bool IsOpen() const override;
 
     /**
+     * Report internal errors, if any.
+     *
+     * @param level    Which subsystem (TBD)
+     * @return         Status code from that level
+     */
+    int GetError(uint32_t level) const;
+
+    /**
      * Call into and app running on Nugget.
      *
      * @param app_id   The ID of the app to call.
@@ -112,6 +120,7 @@ protected:
     std::string device_name_;
     nos_device device_;
     bool open_;
+    int errno_;
 };
 
 } // namespace nos
