@@ -111,7 +111,9 @@ enum AttestationSelector {
   ATTEST_SELF = 3;
   ATTEST_CALLER = 4;
   ATTEST_DICE = 5;
-  ATTEST_UDS = 6;
+  ATTEST_UDS_LEAF = 6;
+  ATTEST_UDS_SUB = 7;
+  ATTEST_UDS_ROOT = 8;
 }
 
 message VigoKey {
