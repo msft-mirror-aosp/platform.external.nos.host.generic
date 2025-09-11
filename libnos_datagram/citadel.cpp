@@ -65,7 +65,6 @@ struct gsa_ioc_nos_call_req {
                          struct gsa_ioc_nos_call_req)
 /*****************************************************************************/
 
-// TODO(b/432535134): Drop DEV_CITADEL, s/DEV_DAUNTLESS/DEV_GSC/g
 #define DEV_CITADEL   "/dev/citadel0"
 #define DEV_DAUNTLESS "/dev/gsc0"
 
@@ -339,7 +338,6 @@ static const char *default_device(void) {
     struct stat statbuf;
     int rv;
 
-    // TODO(b/432535134): Citadel is EOLed now
     rv = stat(DEV_CITADEL, &statbuf);
     if (!rv) {
         return DEV_CITADEL;
@@ -350,7 +348,7 @@ static const char *default_device(void) {
         return DEV_DAUNTLESS;
     }
 
-    return NULL;
+    return 0;
 }
 
 int nos_device_open(const char *device_name, struct nos_device *dev) {
@@ -361,23 +359,22 @@ int nos_device_open(const char *device_name, struct nos_device *dev) {
     }
 
     if (!device_name) {
-      ALOGE("Can't find kernel device node: %s", strerror(errno));
-      return errno;
+      ALOGE("can't find device node\n");
+      return -ENODEV;
     }
 
     fd = open(device_name, O_RDWR);
     if (fd < 0) {
-      ALOGE("Can't open kernel device node \"%s\": %s", device_name,
-            strerror(errno));
-      return errno;
+        ALOGE("can't open device \"%s\": %s", device_name, strerror(errno));
+        return -errno;
     }
 
     /* Our context is just a pointer to an int holding the fd */
     new_ctx = (int *)malloc(sizeof(int));
     if (!new_ctx) {
-      ALOGE("Can't malloc new ctx: %s", strerror(errno));
-      close(fd);
-      return errno;
+        ALOGE("can't malloc new ctx: %s", strerror(errno));
+        close(fd);
+        return -ENOMEM;
     }
     *new_ctx = fd;
 
