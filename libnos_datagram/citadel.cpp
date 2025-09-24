@@ -331,7 +331,11 @@ exit:
       return -errno;
   }
 
-  ALOGD("App 0x%02x returning 0x%x", app_id, *status_code);
+  // the status_code is meaningful only when the call succeeded.
+  if (ret >= 0) {
+    ALOGD("App 0x%02x returning 0x%x", app_id, *status_code);
+  }
+
   return ret;
 }
 
