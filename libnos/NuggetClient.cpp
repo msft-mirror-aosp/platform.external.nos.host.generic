@@ -22,11 +22,10 @@
 namespace nos {
 
 NuggetClient::NuggetClient(const std::string& name)
-    : device_name_(name), open_(false) {
-}
+    : device_name_(name), open_(false), errno_(0) {}
 
 NuggetClient::NuggetClient(const char* name, uint32_t config)
-    : device_name_(name ? name : ""), open_(false) {
+    : device_name_(name ? name : ""), open_(false), errno_(0) {
   device_ = { .config = config };
 }
 
@@ -36,8 +35,9 @@ NuggetClient::~NuggetClient() {
 
 void NuggetClient::Open() {
   if (!open_) {
-    open_ = nos_device_open(
-        device_name_.empty() ? nullptr : device_name_.c_str(), &device_) == 0;
+    errno_ = nos_device_open(
+        device_name_.empty() ? nullptr : device_name_.c_str(), &device_);
+    open_ = (0 == errno_);
   }
 }
 
@@ -46,10 +46,15 @@ void NuggetClient::Close() {
     device_.ops.close(device_.ctx);
     open_ = false;
   }
+  errno_ = 0;
 }
 
 bool NuggetClient::IsOpen() const {
   return open_;
+}
+
+int NuggetClient::GetError([[maybe_unused]] uint32_t level) const {
+  return errno_;
 }
 
 uint32_t NuggetClient::CallApp(uint32_t appId, uint16_t arg,
