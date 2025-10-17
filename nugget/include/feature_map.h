@@ -53,6 +53,7 @@ enum km_feature_list {
 
 enum nugget_feature_list {
   nugget_feature_test_image = 0,
+  nugget_feature_deferred_updates = 1,
 
   /* Please do not change numbers after they've been released */
 

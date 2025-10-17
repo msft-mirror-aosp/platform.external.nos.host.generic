@@ -99,10 +99,10 @@ struct nugget_app_password {
   uint8_t password[NUGGET_UPDATE_PASSWORD_LEN];
 } __packed;
 
-
 enum NUGGET_ENABLE_HEADER {
-  NUGGET_ENABLE_HEADER_RO = 0x01,
-  NUGGET_ENABLE_HEADER_RW = 0x02,
+  NUGGET_ENABLE_HEADER_RO = (1 << 0),
+  NUGGET_ENABLE_HEADER_RW = (1 << 1),
+  NUGGET_ENABLE_HEADER_DEFERRED = (1 << 7),
 };
 struct nugget_app_enable_update {
   struct nugget_app_password  password;
