@@ -110,7 +110,8 @@ static int read_datagram(void *ctx, uint32_t command, uint8_t *buf, uint32_t len
 
     ret = ioctl(fd, CITADEL_IOC_TPM_DATAGRAM, &dg);
     if (ret < 0) {
-        ALOGE("can't send spi message: %s", strerror(errno));
+        if (errno != EAGAIN)
+            ALOGE("can't send spi message: %s", strerror(errno));
         ret = -errno;
         goto out;
     }
@@ -162,7 +163,8 @@ static int write_datagram(void *ctx, uint32_t command, const uint8_t *buf, uint3
 
     ret = ioctl(fd, CITADEL_IOC_TPM_DATAGRAM, &dg);
     if (ret < 0) {
-        ALOGE("can't send spi message: %s", strerror(errno));
+        if (errno != EAGAIN)
+            ALOGE("can't send spi message: %s", strerror(errno));
         ret = -errno;
         goto out;
     }
