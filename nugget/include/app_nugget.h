@@ -644,6 +644,17 @@ struct secure_channel_retry_count_persist_storage {
  * @errors             APP_ERROR_BOGUS_ARGS, APP_ERROR_INTERNAL
  */
 
+/*
+ * Trigger deferred updates set via NUGGET_PARAM_ENABLE_UPDATE with the
+ * provided deferred update flag
+ *
+ * @param args      None
+ * @param arg_len   0 bytes
+ * @param reply     headers enabled
+ * @param reply_len 1 byte
+ */
+#define NUGGET_PARAM_TRIGGER_DEFERRED_UPDATE 0x0020
+
 /****************************************************************************/
 /* Test related commands */
 
