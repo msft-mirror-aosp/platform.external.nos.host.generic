@@ -47,13 +47,13 @@ namespace {
 
 std::string validateServiceOptions(const ServiceDescriptor& service) {
     if (!service.options().HasExtension(app_id)) {
-        return "nugget.protobuf.app_id is not defined for service " + service.name();
+        return absl::StrCat("nugget.protobuf.app_id is not defined for service ", service.name());
     }
     if (!service.options().HasExtension(request_buffer_size)) {
-        return "nugget.protobuf.request_buffer_size is not defined for service " + service.name();
+        return absl::StrCat("nugget.protobuf.request_buffer_size is not defined for service ", service.name());
     }
     if (!service.options().HasExtension(response_buffer_size)) {
-        return "nugget.protobuf.response_buffer_size is not defined for service " + service.name();
+        return absl::StrCat("nugget.protobuf.response_buffer_size is not defined for service ", service.name());
     }
     return "";
 }
@@ -70,7 +70,7 @@ template <typename Descriptor>
 std::string FullyQualifiedIdentifier(const Descriptor& descriptor) {
     const auto namespaces = Packages(descriptor);
     if (namespaces.empty()) {
-        return "::" + descriptor.name();
+        return absl::StrCat("::", descriptor.name());
     } else {
         return absl::StrCat("::", absl::StrJoin(namespaces, "::"), "::", descriptor.name());
     }
@@ -127,9 +127,9 @@ void ForEachMethod(const ServiceDescriptor& service,
 
 void GenerateMockClient(Printer& printer, const ServiceDescriptor& service) {
     std::map<std::string, std::string> vars;
-    vars["include_guard"] = "PROTOC_GENERATED_MOCK_" + service.name() + "_CLIENT_H";
-    vars["service_header"] = service.name() + ".client.h";
-    vars["mock_class"] = "Mock" + service.name();
+    vars["include_guard"] = absl::StrCat("PROTOC_GENERATED_MOCK_", service.name(), "_CLIENT_H");
+    vars["service_header"] = absl::StrCat(service.name(), ".client.h");
+    vars["mock_class"] = absl::StrCat("Mock", service.name());
     vars["class"] = service.name();
 
     printer.Print(vars, R"(
@@ -161,11 +161,11 @@ struct $mock_class$ : public I$class$ {)");
 
 void GenerateClientHeader(Printer& printer, const ServiceDescriptor& service) {
     std::map<std::string, std::string> vars;
-    vars["include_guard"] = "PROTOC_GENERATED_" + service.name() + "_CLIENT_H";
+    vars["include_guard"] = absl::StrCat("PROTOC_GENERATED_", service.name(), "_CLIENT_H");
     vars["protobuf_header"] = FullyQualifiedHeader(service);
     vars["class"] = service.name();
-    vars["iface_class"] = "I" + service.name();
-    vars["app_id"] = "APP_ID_" + service.options().GetExtension(app_id);
+    vars["iface_class"] = absl::StrCat("I", service.name());
+    vars["app_id"] = absl::StrCat("APP_ID_", service.options().GetExtension(app_id));
 
     printer.Print(vars, R"(
 #ifndef $include_guard$
@@ -217,7 +217,7 @@ public:
 
 void GenerateClientSource(Printer& printer, const ServiceDescriptor& service) {
     std::map<std::string, std::string> vars;
-    vars["generated_header"] = service.name() + ".client.h";
+    vars["generated_header"] = absl::StrCat(service.name(), ".client.h");
     vars["class"] = service.name();
 
     const uint32_t max_request_size = service.options().GetExtension(request_buffer_size);
@@ -285,17 +285,17 @@ public:
 
             if (parameter == "mock") {
                 std::unique_ptr<ZeroCopyOutputStream> output{
-                        output_directory->Open("Mock" + service.name() + ".client.h")};
+                        output_directory->Open(absl::StrCat("Mock", service.name(), ".client.h"))};
                 Printer printer(output.get(), '$');
                 GenerateMockClient(printer, service);
             } else if (parameter == "header") {
                 std::unique_ptr<ZeroCopyOutputStream> output{
-                        output_directory->Open(service.name() + ".client.h")};
+                        output_directory->Open(absl::StrCat(service.name(), ".client.h"))};
                 Printer printer(output.get(), '$');
                 GenerateClientHeader(printer, service);
             } else if (parameter == "source") {
                 std::unique_ptr<ZeroCopyOutputStream> output{
-                        output_directory->Open(service.name() + ".client.cpp")};
+                        output_directory->Open(absl::StrCat(service.name(), ".client.cpp"))};
                 Printer printer(output.get(), '$');
                 GenerateClientSource(printer, service);
             } else {
