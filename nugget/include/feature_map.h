@@ -40,10 +40,11 @@ enum km_feature_list {
   km_feature_individual_attest = 0,
   km_feature_batch_attest = 1,
   km_feature_gnubby_attest = 2,
-  km_feature_rkp = 3,
-  km_feature_rkp_dice = 4,
-  km_feature_dice = 5,
+  km_feature_rkp = 3,       // degenerated
+  km_feature_rkp_dice = 4,  // proper
+  km_feature_dice = 5,      // supported by ROM_EXT
   km_feature_multimei = 6,
+  km_feature_udscert = 7,
 
   /* Please do not change numbers after they've been released */
 
@@ -52,6 +53,7 @@ enum km_feature_list {
 
 enum nugget_feature_list {
   nugget_feature_test_image = 0,
+  nugget_feature_deferred_updates = 1,
 
   /* Please do not change numbers after they've been released */
 
