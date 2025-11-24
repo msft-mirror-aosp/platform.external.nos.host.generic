@@ -99,10 +99,10 @@ struct nugget_app_password {
   uint8_t password[NUGGET_UPDATE_PASSWORD_LEN];
 } __packed;
 
-
 enum NUGGET_ENABLE_HEADER {
-  NUGGET_ENABLE_HEADER_RO = 0x01,
-  NUGGET_ENABLE_HEADER_RW = 0x02,
+  NUGGET_ENABLE_HEADER_RO = (1 << 0),
+  NUGGET_ENABLE_HEADER_RW = (1 << 1),
+  NUGGET_ENABLE_HEADER_DEFERRED = (1 << 7),
 };
 struct nugget_app_enable_update {
   struct nugget_app_password  password;
@@ -643,6 +643,17 @@ struct secure_channel_retry_count_persist_storage {
  *
  * @errors             APP_ERROR_BOGUS_ARGS, APP_ERROR_INTERNAL
  */
+
+/*
+ * Trigger deferred updates set via NUGGET_PARAM_ENABLE_UPDATE with the
+ * provided deferred update flag
+ *
+ * @param args      None
+ * @param arg_len   0 bytes
+ * @param reply     headers enabled
+ * @param reply_len 1 byte
+ */
+#define NUGGET_PARAM_TRIGGER_DEFERRED_UPDATE 0x0020
 
 /****************************************************************************/
 /* Test related commands */
