@@ -53,7 +53,16 @@ enum nos2_weaver_cmd {
   NOS2_WEAVER_GET_CONFIG,
   NOS2_WEAVER_WRITE,
   NOS2_WEAVER_READ,
+
+  /*
+   * The Erase command was never implemented in Binder and is deprecated.
+   * However, DO NOT delete this value (Bad Things if Android downgrades)
+   */
   NOS2_WEAVER_ERASE_VALUE,
+
+  /* Weaver HAL V3 commands */
+  NOS2_WEAVER_WARMUP,
+  NOS2_WEAVER_GET_TIMEOUT,
 
   NOS2_WEAVER_NUM_CMDS
 };
@@ -90,10 +99,10 @@ struct nos2_weaver_read_request {
 };
 
 enum nos2_weaver_read_status {
-    NOS2_WEAVER_READ_STATUS_OK,
-    NOS2_WEAVER_READ_STATUS_FAILED,
-    NOS2_WEAVER_READ_STATUS_INCORRECT_KEY,
-    NOS2_WEAVER_READ_STATUS_THROTTLE,
+  NOS2_WEAVER_READ_STATUS_OK,
+  NOS2_WEAVER_READ_STATUS_FAILED,
+  NOS2_WEAVER_READ_STATUS_INCORRECT_KEY,
+  NOS2_WEAVER_READ_STATUS_THROTTLE,
 };
 
 struct nos2_weaver_read_response {
@@ -112,6 +121,39 @@ struct nos2_weaver_erase_request {
   uint32_t slot_id;
 };
 /* There is no struct nos2_weaver_erase_response */
+
+/**************************/
+/* Weaver HAL V3 commands */
+
+/** NOS2_WEAVER_WARMUP */
+/* There is no struct nos2_weaver_warmup_request */
+/* There is no struct nos2_weaver_warmup_response */
+
+/** NOS2_WEAVER_GET_TIMEOUT */
+struct nos2_weaver_get_timeout_request {
+  struct nos2_cmd_hal hal;
+
+  uint32_t slot_id;
+};
+
+/*
+ * The AIDL definition wants getTimeout() to throw a different exception if we
+ * ask for an invalid slot vs the default exception for invalid method calls,
+ * but we've always returned APP_ERROR_BOGUS_ARGS for both. Rather than define a
+ * new return value that has to be handled in all sorts of places or declare
+ * some magic integer value as invalid, we'll just return a status value too.
+ */
+enum nos2_weaver_get_timeout_status {
+  NOS2_WEAVER_GET_TIMEOUT_STATUS_OK,
+  NOS2_WEAVER_GET_TIMEOUT_STATUS_FAILED, /* invalid slot */
+};
+
+struct nos2_weaver_get_timeout_response {
+  struct nos2_cmd_hal hal;
+
+  uint32_t status;    /* enum nos2_weaver_get_timeout_status */
+  uint64_t timeout64; /* in milliseconds for some reason */
+};
 
 /****************************************************************************/
 #ifdef __cplusplus

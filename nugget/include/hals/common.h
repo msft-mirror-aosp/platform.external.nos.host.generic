@@ -41,7 +41,7 @@ struct nos2_cmd_hal {
  *   Do *NOT* increment the version number with each new dessert release!
  *
  *   We'll use a (major << 16) | (minor) value for the version. The major
- *   versionn indicates when the command was first supported, and the minor
+ *   version indicates when the command was first supported, and the minor
  *   indicates variations to it since then.
  *
  *   We're currently working on Android 14 (UDC), so start with that. Bump minor
@@ -62,6 +62,9 @@ struct nos2_cmd_hal {
  *
  *   4) Make sure to indicate the version in the output structs too, in case the
  *      command has no input args but the output later changes.
+ *
+ *   We don't need to a new version if we just add a new command, because the
+ *   older firmware rejects it as invalid anyway.
  *
  * IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT
  */

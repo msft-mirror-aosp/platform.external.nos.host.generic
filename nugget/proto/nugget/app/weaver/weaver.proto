@@ -39,6 +39,10 @@ service Weaver {
   // be verified but the secret value is not required so it is safest to zero it
   // out so it doesn't leak.
   rpc EraseValue (EraseValueRequest) returns (EraseValueResponse);
+
+  // Weaver HAL V3
+  rpc WarmUp(WarmUpRequest) returns (WarmUpResponse);
+  rpc GetTimeout(GetTimeoutRequest) returns (GetTimeoutResponse);
 }
 
 // GetConfig
@@ -80,3 +84,21 @@ message EraseValueRequest {
   uint32 slot = 1;
 }
 message EraseValueResponse {}
+
+// WarmUp
+message WarmUpRequest {}
+message WarmUpResponse {}
+
+// GetTimeout
+message GetTimeoutRequest {
+  uint32 slot = 1;
+}
+message GetTimeoutResponse {
+  enum Status {
+    OK = 0;
+    FAILED = 1;  // invalid slot
+  }
+
+  Status status = 1;
+  uint64 timeout64 = 2;
+}
