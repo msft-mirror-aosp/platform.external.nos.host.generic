@@ -307,8 +307,14 @@ int request_is_invalid(struct app_transport *s);
  */
 void app_reply(struct app_transport *st, uint32_t status, uint16_t reply_len);
 
-/* Application status codes are uint32_t, but an enum is easier to read. */
-enum app_status {
+/* Application status codes are uint32_t, but an enum is easier to read.
+ * Some targets do not support the `enum_extensibility` attribute, so
+ * disable related compiler warnings. Extensible enums allows targets to
+ * enable `-Wassign-enum` and catch bad casts.
+ */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wattributes"
+enum __attribute__((enum_extensibility(open))) app_status {
   /* A few values are common to all applications */
   APP_SUCCESS = 0,
   APP_ERROR_BOGUS_ARGS, /* caller being stupid */
@@ -343,6 +349,7 @@ enum app_status {
   /* Bit 31 is reserved for internal use */
   MAX_APP_STATUS = 0x7fffffff,
 };
+#pragma GCC diagnostic pop
 
 /**
  * This registers an application that communicates using the Transport API.
