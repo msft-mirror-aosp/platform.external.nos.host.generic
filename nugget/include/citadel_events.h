@@ -82,6 +82,11 @@ enum upgrade_state_def {
   UPGRADE_SUCCESS_RO = 3,
   UPGRADE_PW_MISMATCH_RO = 4,
   UPGRADE_EN_FW_FAIL_RO = 5,
+  /* Defines for deferred updates */
+  UPGRADE_DEFERRED_SUCCESS = 6,
+  UPGRADE_DEFERRED_EN_FW_FAIL = 7,
+  UPGRADE_DEFERRED_SUCCESS_RO = 8,
+  UPGRADE_DEFERRED_EN_FAIL_RO = 9,
 };
 
 /*
