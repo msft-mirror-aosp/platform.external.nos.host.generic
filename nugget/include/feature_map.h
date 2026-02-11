@@ -62,6 +62,7 @@ enum nugget_feature_list {
 
 enum avb_feature_list {
   avb_feature_api_no_proto = 0,
+  avb_feature_device_info = 1,
 
   /* Please do not change numbers after they've been released */
 
